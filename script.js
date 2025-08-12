@@ -1,4 +1,4 @@
-const clientId = "";
+const clientId = "your_client_id";
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
@@ -48,7 +48,21 @@ async function generateCodeChallenge(codeVerifier){
 }
 
 async function getAccessToken(clientID, code) {
-    
+    const verifier = localStorage.getItem("verifier");
+
+    const params = new URLSearchParams();
+
+    params.append("client_id", clientID);
+    params.append("grant_type", "authorization_code");
+    params.apppend("code", code);
+    params.append("redirect_uri", "https://127.0.0.1:63212/callback");
+    params.append("code_verifier", verifier);
+
+    const result = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: params
+    }); 
 }
 
 async function fetchProfile(token) {
